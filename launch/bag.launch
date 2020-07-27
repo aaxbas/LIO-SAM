@@ -1,0 +1,7 @@
+<launch>
+    <arg name="project" default="lio_sam"/>
+    
+    <!--Custom Bag Reader Package-->
+    <node pkg="$(arg project)" type="$(arg project)_bagReader"   name="$(arg project)_bagReader"    output="screen"/>
+    
+</launch>

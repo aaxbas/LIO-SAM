@@ -18,6 +18,9 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   message_generation
+
+  # My additions
+  rosbag
 )
 
 find_package(OpenMP REQUIRED)
@@ -50,6 +53,9 @@ catkin_package(
   sensor_msgs
   message_runtime 
   message_generation
+
+  # My additions
+  rosbag
 )
 
 # include directories
@@ -92,3 +98,7 @@ target_link_libraries(${PROJECT_NAME}_mapOptmization ${catkin_LIBRARIES} ${PCL_L
 # IMU Preintegration
 add_executable(${PROJECT_NAME}_imuPreintegration src/imuPreintegration.cpp)
 target_link_libraries(${PROJECT_NAME}_imuPreintegration ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES} gtsam)
+
+# Bag Reader
+add_executable(${PROJECT_NAME}_bagReader src/bagReader.cpp)
+target_link_libraries(${PROJECT_NAME}_bagReader ${catkin_LIBRARIES})
