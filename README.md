@@ -7,6 +7,10 @@ rosrun lio_sam run.launch file:=$(YOUR BAG FILE LOCATION)
 
 This project uses "lazy-loading" to read the data from the rosbag, rather than loading it all into RAM. The effects of this can be instantly realised when running the program, especially when compared to the original LIO-SAM. This is implemented using a custom bagReader class that handles this, although currently all of it's features are not being used.
 
+ROS Graph:
+
+![ROS Graph](./config/doc/rosgraph.svg)
+
 ## Possible improvements
 - Reading bag data into RAM in chunks, or perhaps even the entire file. This is the main limitation currently.
 
