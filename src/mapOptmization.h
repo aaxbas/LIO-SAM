@@ -1,3 +1,4 @@
+#pragma once
 #include "utility.h"
 #include "lio_sam/cloud_info.h"
 
@@ -1576,7 +1577,7 @@ public:
     }
 };
 
-
+/*
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "lio_sam");
@@ -1595,3 +1596,4 @@ int main(int argc, char** argv)
 
     return 0;
 }
+*/

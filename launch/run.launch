@@ -1,12 +1,12 @@
 <launch>
 
     <arg name="project" default="lio_sam"/>
-    
+    <arg name = "file" default="$(find lio_sam)/datasets/casual_walk.bag"/>
     <!-- Parameters -->
     <rosparam file="$(find lio_sam)/config/params.yaml" command="load" />
 
-    <!--- LOAM -->
-    <include file="$(find lio_sam)/launch/include/module_loam.launch" />
+    <!--- Modified LIO-SAM -->
+    <node pkg="$(arg project)" type="$(arg project)_main"   name="$(arg project)_main"    output="screen" 	respawn="true" args="$(arg file)"/>
 
     <!--- Robot State TF -->
     <include file="$(find lio_sam)/launch/include/module_robot_state_publisher.launch" />

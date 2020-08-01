@@ -143,7 +143,8 @@ public:
     float globalMapVisualizationLeafSize;
 
     ParamServer()
-    {
+    {   
+        
         nh.param<std::string>("/robot_id", robot_id, "roboat");
 
         nh.param<std::string>("lio_sam/pointCloudTopic", pointCloudTopic, "points_raw");
@@ -176,9 +177,10 @@ public:
         nh.param<vector<double>>("lio_sam/extrinsicRot", extRotV, vector<double>());
         nh.param<vector<double>>("lio_sam/extrinsicRPY", extRPYV, vector<double>());
         nh.param<vector<double>>("lio_sam/extrinsicTrans", extTransV, vector<double>());
-        extRot = Eigen::Map<const Eigen::Matrix<double, -1, -1, Eigen::RowMajor>>(extRotV.data(), 3, 3);
-        extRPY = Eigen::Map<const Eigen::Matrix<double, -1, -1, Eigen::RowMajor>>(extRPYV.data(), 3, 3);
-        extTrans = Eigen::Map<const Eigen::Matrix<double, -1, -1, Eigen::RowMajor>>(extTransV.data(), 3, 1);
+
+        extRot = Eigen::Map<Eigen::Matrix<double, 3, 3>>(extRotV.data(), 3, 3);
+        extRPY = Eigen::Map<Eigen::Matrix<double, 3, 3>>(extRPYV.data(), 3, 3);
+        extTrans = Eigen::Map<Eigen::Matrix<double, 3, 1>>(extTransV.data(), 3, 1);
         extQRPY = Eigen::Quaterniond(extRPY);
 
         nh.param<float>("lio_sam/edgeThreshold", edgeThreshold, 0.1);

@@ -1,4 +1,18 @@
-# LIO-SAM
+# "Offline" LIO-SAM
+This fork of LIO-SAM reads data from a rosbag (using the C++ API) and handles all internal communication via C++ pointers. Installation steps remain the same as LIO-SAM, with the additional requirement of needing a  `datasets`  folder where the `.bag` file will be read from. After following all the installation steps all you need to do is launch the main launch file, as follows:
+
+```
+rosrun lio_sam run.launch file:=$(YOUR BAG FILE LOCATION)
+```
+
+This project uses "lazy-loading" to read the data from the rosbag, rather than loading it all into RAM. The effects of this can be instantly realised when running the program, especially when compared to the original LIO-SAM. This is implemented using a custom bagReader class that handles this, although currently all of it's features are not being used.
+
+## Possible improvements
+- Reading bag data into RAM in chunks, or perhaps even the entire file. This is the main limitation currently.
+
+Further efficiency methods must be further investigated.
+
+## What is LIO-SAM?
 
 **A real-time lidar-inertial odometry package. We strongly recommend the users read this document thoroughly and test the package with the provided dataset first. A video of the demonstration of the method can be found on [YouTube](https://www.youtube.com/watch?v=A0H8CoORZJU).**
 

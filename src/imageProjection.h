@@ -1,3 +1,4 @@
+#pragma once
 #include "utility.h"
 #include "lio_sam/cloud_info.h"
 
@@ -43,13 +44,13 @@ private:
     std::mutex imuLock;
     std::mutex odoLock;
 
-    ros::Subscriber subLaserCloud;
+    //ros::Subscriber subLaserCloud;
     ros::Publisher  pubLaserCloud;
     
     ros::Publisher pubExtractedCloud;
     ros::Publisher pubLaserCloudInfo;
 
-    ros::Subscriber subImu;
+    //ros::Subscriber subImu;
     std::deque<sensor_msgs::Imu> imuQueue;
 
     ros::Subscriber subOdom;
@@ -89,9 +90,9 @@ public:
     ImageProjection():
     deskewFlag(0)
     {
-        subImu        = nh.subscribe<sensor_msgs::Imu>(imuTopic, 2000, &ImageProjection::imuHandler, this, ros::TransportHints().tcpNoDelay());
+        //subImu        = nh.subscribe<sensor_msgs::Imu>(imuTopic, 2000, &ImageProjection::imuHandler, this, ros::TransportHints().tcpNoDelay());
         subOdom       = nh.subscribe<nav_msgs::Odometry>(odomTopic+"_incremental", 2000, &ImageProjection::odometryHandler, this, ros::TransportHints().tcpNoDelay());
-        subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>(pointCloudTopic, 5, &ImageProjection::cloudHandler, this, ros::TransportHints().tcpNoDelay());
+        //subLaserCloud = nh.subscribe<sensor_msgs::PointCloud2>(pointCloudTopic, 5, &ImageProjection::cloudHandler, this, ros::TransportHints().tcpNoDelay());
 
         pubExtractedCloud = nh.advertise<sensor_msgs::PointCloud2> ("lio_sam/deskew/cloud_deskewed", 1);
         pubLaserCloudInfo = nh.advertise<lio_sam::cloud_info> ("lio_sam/deskew/cloud_info", 1);
@@ -148,7 +149,7 @@ public:
         std::lock_guard<std::mutex> lock1(imuLock);
         imuQueue.push_back(thisImu);
 
-        // debug IMU data
+        //debug IMU data
         // cout << std::setprecision(6);
         // cout << "IMU acc: " << endl;
         // cout << "x: " << thisImu.linear_acceleration.x << 
@@ -577,6 +578,7 @@ public:
     }
 };
 
+/*
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "lio_sam");
@@ -585,8 +587,8 @@ int main(int argc, char** argv)
     
     ROS_INFO("\033[1;32m----> Image Projection Started.\033[0m");
 
-    ros::MultiThreadedSpinner spinner(3);
-    spinner.spin();
-    
+    //ros::MultiThreadedSpinner spinner(3);
+    //spinner.spin();
+    ros::spin();
     return 0;
-}
+}*/

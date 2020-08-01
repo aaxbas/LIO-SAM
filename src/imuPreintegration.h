@@ -1,4 +1,6 @@
+#pragma once
 #include "utility.h"
+//#include "bagReader.h"
 
 #include <gtsam/geometry/Rot3.h>
 #include <gtsam/geometry/Pose3.h>
@@ -15,6 +17,12 @@
 
 #include <gtsam/nonlinear/ISAM2.h>
 #include <gtsam_unstable/nonlinear/IncrementalFixedLagSmoother.h>
+
+//#include <rosbag/view.h>
+
+//#include <boost/foreach.hpp>
+
+//#define foreach BOOST_FOREACH
 
 using gtsam::symbol_shorthand::X; // Pose3 (x,y,z,r,p,y)
 using gtsam::symbol_shorthand::V; // Vel   (xdot,ydot,zdot)
@@ -117,7 +125,7 @@ public:
 
     std::mutex mtx;
 
-    ros::Subscriber subImu;
+    //ros::Subscriber subImu;
     ros::Subscriber subOdometry;
     ros::Publisher pubImuOdometry;
     ros::Publisher pubImuPath;
@@ -168,7 +176,7 @@ public:
 
     IMUPreintegration()
     {
-        subImu      = nh.subscribe<sensor_msgs::Imu>  (imuTopic,                   2000, &IMUPreintegration::imuHandler,      this, ros::TransportHints().tcpNoDelay());
+        //subImu      = nh.subscribe<sensor_msgs::Imu>  (imuTopic,                   2000, &IMUPreintegration::imuHandler,      this, ros::TransportHints().tcpNoDelay());
         subOdometry = nh.subscribe<nav_msgs::Odometry>("lio_sam/mapping/odometry_incremental", 5,    &IMUPreintegration::odometryHandler, this, ros::TransportHints().tcpNoDelay());
 
         pubImuOdometry = nh.advertise<nav_msgs::Odometry> (odomTopic+"_incremental", 2000);
@@ -417,7 +425,7 @@ public:
 
         return false;
     }
-
+    public:
     void imuHandler(const sensor_msgs::Imu::ConstPtr& imu_raw)
     {
         std::lock_guard<std::mutex> lock(mtx);
@@ -469,7 +477,7 @@ public:
     }
 };
 
-
+/*
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "roboat_loam");
@@ -478,10 +486,22 @@ int main(int argc, char** argv)
 
     TransformFusion TF;
 
+    //bagReader bgr;
+
     ROS_INFO("\033[1;32m----> IMU Preintegration Started.\033[0m");
     
-    ros::MultiThreadedSpinner spinner(4);
-    spinner.spin();
-    
+    //sensor_msgs::Imu::ConstPtr sensor;
+
+    //bgr.load(std::string("/home/osboxes/Documents/cust_space/src/LIO-SAM/datasets/casual_walk.bag"));
+
+    foreach(rosbag::MessageInstance m, bgr.view){
+        sensor = bgr.read(m);
+        ImuP.imuHandler(sensor);
+        ros::spinOnce();
+    }
+    //ros::MultiThreadedSpinner spinner(4); // Use 4 threads
+    //spinner.spin();
+    ros::spin();
     return 0;
 }
+*/

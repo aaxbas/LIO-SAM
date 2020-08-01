@@ -1,46 +1,59 @@
-/**
- *  bagReader.cpp
- *  Read data from rosbag
- * 
- * TODO: Add relevant data for integration with other LIO-SAM packages
- * TODO: Improve this to be callable to other functions
- **/
+#include "bagReader.h"
 
 #include <ros/ros.h>
 #include <rosbag/view.h>
 
 #include <gtest/gtest.h>
+
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
-#include <boost/foreach.hpp>
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/PointCloud2.h>
+
+#include <message_filters/subscriber.h>
+#include <message_filters/time_synchronizer.h>
+
+#include <boost/foreach.hpp>
 
 #define foreach BOOST_FOREACH
 
-int main (int argc, char** argv)
-{
-    ros::init (argc, argv, "bag_it");
-    rosbag::Bag bag;
+int main(int argc, char** argv){
+    ros::init(argc, argv, "bag_reader");
 
-    bag.open("src/LIO-SAM/datasets/casual_walk.bag", rosbag::bagmode::Read);
+    ros::NodeHandle n;
 
-    std::vector<std::string> topics;
+    ros::Publisher pubImuRaw = n.advertise<sensor_msgs::Imu>("/imu_raw", 1000);
+    ros::Publisher pubImuCorrect = n.advertise<sensor_msgs::Imu>("/imu_correct", 1000);
+    ros::Publisher pubPointsRaw = n.advertise<sensor_msgs::PointCloud2>("/points_raw", 1000);
 
-    // Read raw IMU data from bag
-    topics.push_back(std::string("/imu_raw"));
+    bagReader bgr;
 
-    rosbag::View view(bag, rosbag::TopicQuery(topics));
+    bgr.load(std::string("/home/osboxes/Documents/cust_space/src/LIO-SAM/datasets/casual_walk.bag"));
 
-    foreach(rosbag::MessageInstance const m, view)
-    {   
-        // print raw IMU data
-        sensor_msgs::Imu::ConstPtr s = m.instantiate<sensor_msgs::Imu>();
-        if (s != NULL)
-            std::cout << s->angular_velocity  << std::endl;
-            std::cout << s->orientation  << std::endl;
-            std::cout << s->linear_acceleration  << std::endl << std::endl;
+    foreach(rosbag::MessageInstance m, bgr.view){
+        //bgr.read(m, imu_raw, imu_correct, points_raw);
+        
+        if(m.getTopic() == "/imu_raw"){
+                sensor_msgs::Imu::ConstPtr s = m.instantiate<sensor_msgs::Imu>();
+                if (s != NULL){
+                    pubImuRaw.publish(*s);
+                }
+            }
+
+            if(m.getTopic() == "/imu_correct"){
+                sensor_msgs::Imu::ConstPtr s = m.instantiate<sensor_msgs::Imu>();
+                if (s != NULL){
+                    pubImuCorrect.publish(*s);
+                }
+            }
+
+            if(m.getTopic() == "/points_raw"){
+                sensor_msgs::PointCloud2::ConstPtr s = m.instantiate<sensor_msgs::PointCloud2>();
+                if (s != NULL){
+                    pubPointsRaw.publish(*s);
+                }
+            }
+
+        ros::spinOnce();
     }
-
-    bag.close();
-    return (0);
 }

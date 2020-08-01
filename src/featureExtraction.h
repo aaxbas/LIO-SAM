@@ -1,4 +1,4 @@
-#include "utility.h"
+#pragma once
 #include "lio_sam/cloud_info.h"
 
 struct smoothness_t{ 
@@ -257,7 +257,7 @@ public:
     }
 };
 
-
+/*
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "lio_sam");
@@ -269,4 +269,4 @@ int main(int argc, char** argv)
     ros::spin();
 
     return 0;
-}
+}*/
