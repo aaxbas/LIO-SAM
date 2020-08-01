@@ -36,21 +36,21 @@ int main(int argc, char** argv){
         if(m.getTopic() == "/imu_raw"){
                 sensor_msgs::Imu::ConstPtr s = m.instantiate<sensor_msgs::Imu>();
                 if (s != NULL){
-                    pubImuRaw.publish(*s);
+                    pubImuRaw.publish(m.instantiate<sensor_msgs::Imu>());
                 }
             }
 
             if(m.getTopic() == "/imu_correct"){
                 sensor_msgs::Imu::ConstPtr s = m.instantiate<sensor_msgs::Imu>();
                 if (s != NULL){
-                    pubImuCorrect.publish(*s);
+                    pubImuCorrect.publish(m.instantiate<sensor_msgs::Imu>());
                 }
             }
 
             if(m.getTopic() == "/points_raw"){
-                sensor_msgs::PointCloud2::ConstPtr s = m.instantiate<sensor_msgs::PointCloud2>();
+                sensor_msgs::PointCloud2ConstPtr s = m.instantiate<sensor_msgs::PointCloud2>();
                 if (s != NULL){
-                    pubPointsRaw.publish(*s);
+                    pubPointsRaw.publish(m.instantiate<sensor_msgs::PointCloud2>());
                 }
             }
 
